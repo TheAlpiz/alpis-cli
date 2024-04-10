@@ -1,15 +1,16 @@
 {
   "name": "alpis-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Alpis CLI For life quality",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "alpis": "./dist/index.js"
+  },
   "type": "module",
-  "private": true,
   "scripts": {
-    "build": "tsup",
-    "alpis-cli": "node ./dist/index.js"
+    "build": "tsup"
   },
   "keywords": [
     "cli",
