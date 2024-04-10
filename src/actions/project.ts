@@ -45,6 +45,7 @@ export async function createProject() {
     await createProjectLayout(projectPath, folders);
 
     console.log(chalk.green("Project created successfully!"));
+    console.log(chalk.green(`cd ${projectPath}`));
   } catch (error) {
     console.error(
       chalk.red("An error occurred while creating the project:") + error.message
