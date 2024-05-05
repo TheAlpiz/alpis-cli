@@ -18,6 +18,10 @@ export async function createProject() {
 
     const projectPath = path.join(process.argv[1], projectName);
 
+    console.log(chalk.green(`${process.argv[1]}`));
+    console.log(chalk.green(`Creating project in ${projectPath}`));
+    
+
     if (fs.existsSync(projectPath)) {
       throw new Error(`Project "${projectName}" already exists`);
     }
