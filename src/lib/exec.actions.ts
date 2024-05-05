@@ -1,4 +1,3 @@
-import chalk from "chalk";
 import { exec } from "child_process";
 
 function execActions(
@@ -15,6 +14,7 @@ function execActions(
           console.error("Error installing dependencies:", error);
           return;
         }
+        console.log("Dependencies installed successfully:", stdout);
       }
     );
 
@@ -26,6 +26,7 @@ function execActions(
           console.error("Error installing dev dependencies:", error);
           return;
         }
+        console.log("Dev dependencies installed successfully:", stdout);
       }
     );
 
@@ -34,9 +35,10 @@ function execActions(
         console.error("Error initializing TypeScript:", error);
         return;
       }
+      console.log("TypeScript initialized successfully:", stdout);
     });
   } catch (error) {
-    chalk.red("An error occurred while executing actions:") + error.message;
+    console.error("An error occurred while executing actions:", error);
   }
 }
 
@@ -47,10 +49,10 @@ function InitProject(projectPath: string) {
         console.error("Error initializing npm:", error);
         return;
       }
+      console.log("npm initialized successfully:", stdout);
     });
   } catch (error) {
-    chalk.red("An error occurred while initializing the project:") +
-      error.message;
+    console.error("An error occurred while initializing the project:", error);
   }
 }
 
