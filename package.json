@@ -1,6 +1,6 @@
 {
   "name": "alpis-cli",
-  "version": "0.0.85",
+  "version": "0.0.86",
   "description": "Alpis CLI For life quality",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -7,8 +7,8 @@ function execActions(
 ) {
   try {
     exec(
-      `npm install ${dependencies.join(" ")} --save`,
-      { cwd: projectPath },
+      `cd ${projectPath} && npm install ${dependencies.join(" ")} --save`,
+
       (error, stdout, stderr) => {
         if (error) {
           console.error("Error installing dependencies:", error);
@@ -19,8 +19,8 @@ function execActions(
     );
 
     exec(
-      `npm install ${devDependencies.join(" ")} --save-dev`,
-      { cwd: projectPath },
+      `cd ${projectPath} && npm install ${devDependencies.join(" ")} --save-dev`,
+
       (error, stdout, stderr) => {
         if (error) {
           console.error("Error installing dev dependencies:", error);
@@ -30,7 +30,7 @@ function execActions(
       }
     );
 
-    exec(`npx tsc --init`, { cwd: projectPath }, (error, stdout, stderr) => {
+    exec(`cd ${projectPath} && npx tsc --init`, (error, stdout, stderr) => {
       if (error) {
         console.error("Error initializing TypeScript:", error);
         return;
@@ -47,7 +47,7 @@ function execActions(
 
 function InitProject(projectPath: string) {
   try {
-    exec(`npm init -y`, { cwd: projectPath }, (error, stdout, stderr) => {
+    exec(`cd ${projectPath} && npm init -y`, (error, stdout, stderr) => {
       if (error) {
         console.error("Error initializing npm:", error);
         return;
