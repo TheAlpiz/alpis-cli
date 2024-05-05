@@ -1,66 +1,56 @@
 import { exec } from "child_process";
+import util from "util";
 
-function execActions(
+const asyncExec = util.promisify(exec);
+
+async function execActions(
   dependencies: string[],
   devDependencies: string[],
   projectPath: string
-) {
+): Promise<void> {
   try {
-    exec(
-      `cd ${projectPath} && npm install ${dependencies.join(" ")} --save`,
-
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error("Error installing dependencies:", error);
-          return;
-        }
-        console.log("Dependencies installed successfully:", stdout);
-      }
+    const { stdout, stderr } = await asyncExec(
+      `npm install ${dependencies.join(" ")} --save`,
+      { cwd: projectPath }
     );
-
-    exec(
-      `cd ${projectPath} && npm install ${devDependencies.join(" ")} --save-dev`,
-
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error("Error installing dev dependencies:", error);
-          return;
-        }
-        console.log("Dev dependencies installed successfully:", stdout);
-      }
-    );
-
-    exec(`cd ${projectPath} && npx tsc --init`, (error, stdout, stderr) => {
-      if (error) {
-        console.error("Error initializing TypeScript:", error);
-        return;
-      }
-      console.log("TypeScript initialized successfully:", stdout);
-    });
+    console.log("Dependencies installed successfully:", stdout);
   } catch (error) {
-    console.error("An error occurred while executing actions:", error);
-    return false;
-  } finally {
-    return true;
+    console.error("Error installing dependencies:", error);
+    throw error; // Propagate the error to the caller
+  }
+
+  try {
+    const { stdout, stderr } = await asyncExec(
+      `npm install ${devDependencies.join(" ")} --save-dev`,
+      { cwd: projectPath }
+    );
+    console.log("Dev dependencies installed successfully:", stdout);
+  } catch (error) {
+    console.error("Error installing dev dependencies:", error);
+    throw error; // Propagate the error to the caller
+  }
+
+  try {
+    const { stdout, stderr } = await asyncExec(`npx tsc --init`, {
+      cwd: projectPath,
+    });
+    console.log("TypeScript initialized successfully:", stdout);
+  } catch (error) {
+    console.error("Error initializing TypeScript:", error);
+    throw error; // Propagate the error to the caller
   }
 }
 
-function InitProject(projectPath: string) {
+async function InitProject(projectPath: string): Promise<void> {
   try {
-    exec(`cd ${projectPath} && npm init -y`, (error, stdout, stderr) => {
-      if (error) {
-        console.error("Error initializing npm:", error);
-        return;
-      }
-      console.log("npm initialized successfully:", stdout);
+    const { stdout, stderr } = await asyncExec(`npm init -y`, {
+      cwd: projectPath,
     });
+    console.log("npm initialized successfully:", stdout);
   } catch (error) {
-    console.error("An error occurred while initializing the project:", error);
-    return false;
-  } finally {
-    return true;
+    console.error("Error initializing npm:", error);
+    throw error; // Propagate the error to the caller
   }
 }
 
-export default execActions;
-export { InitProject };
+export { execActions, InitProject };

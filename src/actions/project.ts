@@ -5,7 +5,7 @@ import { PackageJson } from "../types";
 import { GetQuestions } from "../questions";
 import createProjectLayout, { createFolderAndFiles } from "../lib/fs.actions";
 import { dependencies, devDependencies, folders } from "../lib/defaults";
-import execActions, { InitProject } from "../lib/exec.actions";
+import { InitProject, execActions } from "../lib/exec.actions";
 import createPackageJson from "../lib/generatePackageJson";
 
 export async function createProject() {
@@ -30,11 +30,7 @@ export async function createProject() {
     chalk.green(`${useDefaultPackageJson}`);
 
     if (useDefaultPackageJson) {
-      const isInited = InitProject(projectPath);
-
-      if (!isInited) {
-        throw new Error("Error initializing project");
-      }
+      await InitProject(projectPath);
     } else {
       const packageJson: PackageJson = await GetQuestions.getInitQuestions();
 
@@ -46,15 +42,7 @@ export async function createProject() {
       );
     }
 
-    const isExecutedActions = execActions(
-      dependencies,
-      devDependencies,
-      projectPath
-    );
-
-    if (!isExecutedActions) {
-      throw new Error("Error executing actions");
-    }
+    await execActions(dependencies, devDependencies, projectPath);
 
     await createProjectLayout(projectPath, folders);
 
