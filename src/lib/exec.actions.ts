@@ -1,5 +1,6 @@
 import { exec } from "child_process";
 import util from "util";
+import ora from "ora";
 
 const asyncExec = util.promisify(exec);
 
@@ -8,48 +9,58 @@ async function execActions(
   devDependencies: string[],
   projectPath: string
 ): Promise<void> {
+  const spinner = ora("Installing dependencies").start();
+
   try {
     const { stdout, stderr } = await asyncExec(
       `npm install ${dependencies.join(" ")} --save`,
       { cwd: projectPath }
     );
-    console.log("Dependencies installed successfully:", stdout);
+    spinner.succeed("Dependencies installed");
   } catch (error) {
+    spinner.fail("Error installing dependencies");
     console.error("Error installing dependencies:", error);
-    throw error; // Propagate the error to the caller
+    throw error;
   }
 
   try {
+    spinner.start("Installing dev dependencies");
     const { stdout, stderr } = await asyncExec(
       `npm install ${devDependencies.join(" ")} --save-dev`,
       { cwd: projectPath }
     );
-    console.log("Dev dependencies installed successfully:", stdout);
+    spinner.succeed("Dev dependencies installed");
   } catch (error) {
+    spinner.fail("Error installing dev dependencies");
     console.error("Error installing dev dependencies:", error);
-    throw error; // Propagate the error to the caller
+    throw error;
   }
 
   try {
+    spinner.start("Initializing TypeScript");
     const { stdout, stderr } = await asyncExec(`npx tsc --init`, {
       cwd: projectPath,
     });
-    console.log("TypeScript initialized successfully:", stdout);
+    spinner.succeed("TypeScript initialized");
   } catch (error) {
+    spinner.fail("Error initializing TypeScript");
     console.error("Error initializing TypeScript:", error);
-    throw error; // Propagate the error to the caller
+    throw error;
   }
 }
 
 async function InitProject(projectPath: string): Promise<void> {
+  const spinner = ora("Initializing npm").start();
+
   try {
     const { stdout, stderr } = await asyncExec(`npm init -y`, {
       cwd: projectPath,
     });
-    console.log("npm initialized successfully:", stdout);
+    spinner.succeed("npm initialized");
   } catch (error) {
+    spinner.fail("Error initializing npm");
     console.error("Error initializing npm:", error);
-    throw error; // Propagate the error to the caller
+    throw error;
   }
 }
 
