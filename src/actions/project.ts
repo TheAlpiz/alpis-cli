@@ -16,7 +16,7 @@ export async function createProject() {
       throw new Error("Project name is required");
     }
 
-    const projectPath = path.join(process.argv[1], projectName);
+    const projectPath = path.resolve(process.cwd(), projectName);
 
     if (fs.existsSync(projectPath)) {
       throw new Error(`Project "${projectName}" already exists`);
