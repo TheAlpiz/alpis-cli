@@ -27,6 +27,8 @@ export async function createProject() {
     const { useDefaultPackageJson } =
       await GetQuestions.useDefaultPackageJsonQuestion();
 
+    chalk.green(`${useDefaultPackageJson}`);
+
     if (useDefaultPackageJson) {
       InitProject(projectPath);
     } else {
