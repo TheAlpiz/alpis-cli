@@ -7,7 +7,6 @@ import createProjectLayout, { createFolderAndFiles } from "../lib/fs.actions";
 import { dependencies, devDependencies, folders } from "../lib/defaults";
 import execActions, { InitProject } from "../lib/exec.actions";
 import createPackageJson from "../lib/generatePackageJson";
-import { cwd } from "process";
 
 export async function createProject() {
   try {
@@ -17,11 +16,11 @@ export async function createProject() {
       throw new Error("Project name is required");
     }
 
-    if (fs.existsSync(path.join(cwd(), projectName))) {
+    const projectPath = path.resolve(process.cwd(), projectName);
+
+    if (fs.existsSync(projectPath)) {
       throw new Error(`Project "${projectName}" already exists`);
     }
-
-    const projectPath = path.join(cwd(), projectName);
 
     await createFolderAndFiles(projectPath);
 
