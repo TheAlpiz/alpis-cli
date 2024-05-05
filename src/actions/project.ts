@@ -30,7 +30,11 @@ export async function createProject() {
     chalk.green(`${useDefaultPackageJson}`);
 
     if (useDefaultPackageJson) {
-      InitProject(projectPath);
+      const isInited = InitProject(projectPath);
+
+      if (!isInited) {
+        throw new Error("Error initializing project");
+      }
     } else {
       const packageJson: PackageJson = await GetQuestions.getInitQuestions();
 
@@ -42,7 +46,15 @@ export async function createProject() {
       );
     }
 
-    execActions(dependencies, devDependencies, projectPath);
+    const isExecutedActions = execActions(
+      dependencies,
+      devDependencies,
+      projectPath
+    );
+
+    if (!isExecutedActions) {
+      throw new Error("Error executing actions");
+    }
 
     await createProjectLayout(projectPath, folders);
 

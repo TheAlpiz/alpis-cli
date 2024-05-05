@@ -39,6 +39,9 @@ function execActions(
     });
   } catch (error) {
     console.error("An error occurred while executing actions:", error);
+    return false;
+  } finally {
+    return true;
   }
 }
 
@@ -53,6 +56,9 @@ function InitProject(projectPath: string) {
     });
   } catch (error) {
     console.error("An error occurred while initializing the project:", error);
+    return false;
+  } finally {
+    return true;
   }
 }
 
